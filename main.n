@@ -53,7 +53,7 @@ fn eval(webview_t w, libc.cstr js): void;
 // C: void (*fn)(const char *seq, const char *req, void *arg) → Nature: rawptr<fn(libc.cstr, libc.cstr, anyptr) -> void>
 // C: const char* → libc.cstr; void* → anyptr
 // fn bind(webview_t w, libc.cstr name, rawptr<fn(libc.cstr, libc.cstr, anyptr):void> callback, anyptr arg): void;
-fn bind(webview_t w, libc.cstr name, rawptr<fn(libc.cstr id, libc.cstr req, anyptr arg):void> callback, anyptr arg): void;
+fn bind(webview_t w, libc.cstr name, anyptr callback, anyptr arg): void;
 
 #linkid webview_unbind
 // C: const char* → Nature: libc.cstr
