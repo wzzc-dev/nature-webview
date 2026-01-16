@@ -1,0 +1,64 @@
+import libc
+
+type webview = struct {};
+type webview_t = rawptr<void>;
+
+#linkid webview_create
+fn create(i32 debug, webview_t window):webview_t
+
+#linkid webview_set_title
+fn set_title(webview_t w, libc.cstr title)
+
+#linkid webview_set_size
+fn set_size(webview_t w, i32 width, i32 height, i32 hint)
+
+#linkid webview_set_html
+fn set_html(webview_t w, libc.cstr html)
+
+#linkid webview_run
+fn run(webview_t w)
+
+#linkid webview_destroy
+fn destroy(webview_t w)
+
+#linkid webview_terminate
+fn terminate(webview_t w): void;
+
+#linkid webview_dispatch
+fn dispatch(webview_t w, rawptr<fn(webview_t, anyptr):void> callback, anyptr arg): void;
+
+#linkid webview_get_window
+fn get_window(webview_t w): anyptr;
+
+type webview_native_handle_kind_t = i32;
+type webview_hint_t = i32;
+#linkid webview_get_native_handle
+// C: void* → Nature: anyptr; webview_native_handle_kind_t → 已定义i32别名
+fn get_native_handle(webview_t w,webview_native_handle_kind_t kind): anyptr;
+
+#linkid webview_navigate
+// C: const char* → Nature: libc.cstr（复用已有字符串类型）
+fn navigate(webview_t w, libc.cstr  url): void;
+
+#linkid webview_init
+// C: const char* → Nature: libc.cstr（JS字符串与URL/HTML同规则）
+fn init(webview_t w, libc.cstr js): void;
+
+#linkid webview_eval
+// C: const char* → Nature: libc.cstr
+fn eval(webview_t w, libc.cstr js): void;
+
+// TODO
+#linkid webview_bind
+// C: void (*fn)(const char *seq, const char *req, void *arg) → Nature: rawptr<fn(libc.cstr, libc.cstr, anyptr) -> void>
+// C: const char* → libc.cstr; void* → anyptr
+// fn bind(webview_t w, libc.cstr name, rawptr<fn(libc.cstr, libc.cstr, anyptr):void> callback, anyptr arg): void;
+fn bind(webview_t w, libc.cstr name, rawptr<fn(libc.cstr id, libc.cstr req, anyptr arg):void> callback, anyptr arg): void;
+
+#linkid webview_unbind
+// C: const char* → Nature: libc.cstr
+fn unbind(webview_t w, libc.cstr name): void;
+
+#linkid webview_return
+// C: int status → Nature: i32; const char* → libc.cstr
+fn  webview_return(webview_t w, libc.cstr seq, i32  status, libc.cstr result) : void;

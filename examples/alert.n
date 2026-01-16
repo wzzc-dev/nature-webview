@@ -1,0 +1,14 @@
+import strings
+import webview
+import fmt
+import co
+
+// TODO
+fn main() {
+    webview.webview_t window = webview.create(1, null);
+    webview.set_title(window, "Hello".to_cstr());
+    webview.set_size(window, 400, 300, 0);
+    webview.set_html(window, "<html><body><script> alert(\"Hello World!\")</script></body></html>".to_cstr());
+    webview.run(window);
+    webview.destroy(window)
+}

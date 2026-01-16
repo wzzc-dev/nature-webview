@@ -1,0 +1,45 @@
+import strings
+import webview
+import libc
+import fmt
+
+type Context = struct {
+    webview.webview_t w
+    i64 count
+}
+
+fn count_callback(libc.cstr seq, libc.cstr req, anyptr arg): void {
+    println("count_callback")
+    rawptr<Context> ctx = arg as rawptr<Context>
+    ctx.count = ctx.count + 1
+    println(ctx)
+    string result = fmt.sprintf("%d", ctx.count)
+    println(result)
+    webview.webview_return(ctx.w, seq, 0, result.to_cstr())
+}
+
+fn main() {
+    webview.webview_t w = webview.create(1, null)
+    Context ctx = Context{w: w, count: 0}
+    
+    string html = `
+    <html>
+    <body>
+        <button id="btn">点击计数</button>
+        <span id="count">0</span>
+        <script>
+            document.getElementById('btn').onclick = async () => {
+                console.log("clicked");
+                const result = await window.increment();
+                document.getElementById('count').textContent = result;
+            };
+        </script>
+    </body>
+    </html>
+    `
+    
+    webview.bind(w, "increment".to_cstr(), &count_callback, &ctx as anyptr)
+    webview.set_html(w, html.to_cstr())
+    webview.run(w)
+    webview.destroy(w)
+}

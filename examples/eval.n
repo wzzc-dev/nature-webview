@@ -1,0 +1,19 @@
+import strings
+import webview
+import fmt
+import co
+
+fn eval(webview.webview_t w) {
+    co.sleep(1000)
+    webview.eval(w, "foo('Hello World from nature lang!');".to_cstr());
+}
+fn main() {
+    webview.webview_t window = webview.create(1, null);
+    webview.set_title(window, "Hello".to_cstr());
+    webview.set_size(window, 400, 300, 0);
+    webview.set_html(window, "<html><body><script> function foo(msg) {document.body.innerHTML = msg; }</script></body></html>".to_cstr());
+    webview.init(window, "console.log('Initialized');".to_cstr())
+    var fut = go eval(window)
+    webview.run(window);
+    webview.destroy(window)
+}

@@ -1,0 +1,13 @@
+name = "webview"
+version = "0.1.0"
+authors = ["wzzc-dev"]
+license = "MIT"
+type = "lib"
+entry = "main" 
+
+[links]
+
+
+libwebview = {  darwin_arm64 = 'lib/darwin_arm64/libwebview.a' }
+
+[dependencies]
