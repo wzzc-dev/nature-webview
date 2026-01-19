@@ -1,0 +1,108 @@
+import webview.{Webview, webview_t, create, destroy, run, terminate, set_title, set_size, set_html, bind, eval}
+import libc
+
+// ============================================================
+// Builder API
+// ============================================================
+
+type WebviewBuilder = struct {
+    rawptr<void> _w
+    i32 _debug
+    i32 _width
+    i32 _height
+    i32 _hint
+    string _title
+    string _html
+}
+fn new() : WebviewBuilder {
+    return WebviewBuilder {
+        _w: null,
+        _debug: 0,
+        _width: 800,
+        _height: 600,
+        _hint: 0,
+        _title: "Webview",
+        _html: "<h1>Hello, World!</h1>",
+    }
+}
+fn WebviewBuilder.build() : Webview {
+    webview_t webview = create(self._debug, null);
+    set_title(webview, self._title.to_cstr());
+    set_size(webview, self._width, self._height, self._hint);
+    set_html(webview, self._html.to_cstr());
+    return Webview {
+        webview: webview,
+    }
+}
+
+fn WebviewBuilder.debug(i32 debug) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: debug,
+        _width: self._width,
+        _height: self._height,
+        _hint: self._hint,
+        _title: self._title,
+        _html: self._html,
+    }
+}
+
+fn WebviewBuilder.width(i32 width) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: self._debug,
+        _width: width,
+        _height: self._height,
+        _hint: self._hint,
+        _title: self._title,
+        _html: self._html,
+    }
+}
+
+fn WebviewBuilder.height(i32 height) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: self._debug,
+        _width: self._width,
+        _height: height,
+        _hint: self._hint,
+        _title: self._title,
+        _html: self._html,
+    }
+}
+
+fn WebviewBuilder.hint(i32 hint) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: self._debug,
+        _width: self._width,
+        _height: self._height,
+        _hint: hint,
+        _title: self._title,
+        _html: self._html,
+    }
+}
+
+fn WebviewBuilder.title(string title) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: self._debug,
+        _width: self._width,
+        _height: self._height,
+        _hint: self._hint,
+        _title: title,
+        _html: self._html,
+    }
+}
+
+fn WebviewBuilder.html(string html) : WebviewBuilder {
+    return WebviewBuilder {
+        _w: self._w,
+        _debug: self._debug,
+        _width: self._width,
+        _height: self._height,
+        _hint: self._hint,
+        _title: self._title,
+        _html: html,
+    }
+}

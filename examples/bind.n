@@ -1,0 +1,41 @@
+import webview
+import fmt
+import libc
+import time
+import co
+
+fn hello_callback(libc.cstr seq, libc.cstr req, anyptr arg): void {
+    go println("Hello from Nature! JavaScript called me!")
+}
+
+fn sub_co() {
+    for true {
+        co.sleep(1000)
+        println('hello in sub_co')
+    }
+}
+
+fn main() {
+    fmt.printf("Hello, Nature Webview!\n")
+
+    @async(sub_co(), co.SAME)
+    
+    webview.webview_t window = webview.create(1, null)
+    
+    webview.set_title(window, "Hello World".to_cstr())
+    anyptr fn_ptr = libc.to_cfn(hello_callback as anyptr)
+    println(fn_ptr)
+    webview.bind(window, "sayHello".to_cstr(), fn_ptr, 1024 as anyptr)
+    
+    string html = `
+    <html>
+    <body>
+        <h1>Hello, Nature!</h1>
+        <button onclick="sayHello()">Click to call Nature</button>
+    </body>
+    </html>
+    `
+    webview.set_html(window, html.to_cstr())
+    webview.run(window)
+    webview.destroy(window)
+}

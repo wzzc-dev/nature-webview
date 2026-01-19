@@ -1,20 +1,18 @@
 import strings
 import webview
+import webview.{webview_t}
 import libc
 import fmt
 
 type Context = struct {
-    webview.webview_t w
+    webview_t w
     i64 count
 }
 
 fn count_callback(libc.cstr seq, libc.cstr req, anyptr arg): void {
-    println("count_callback")
     rawptr<Context> ctx = arg as rawptr<Context>
     ctx.count = ctx.count + 1
-    println(ctx)
     string result = fmt.sprintf("%d", ctx.count)
-    println(result)
     webview.webview_return(ctx.w, seq, 0, result.to_cstr())
 }
 

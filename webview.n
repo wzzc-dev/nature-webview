@@ -1,10 +1,9 @@
 import libc
 
-type webview = struct {};
 type webview_t = rawptr<void>;
 
 #linkid webview_create
-fn create(i32 debug, webview_t window):webview_t
+fn create(i32 debug, rawptr<void> window):webview_t
 
 #linkid webview_set_title
 fn set_title(webview_t w, libc.cstr title)
@@ -48,7 +47,6 @@ fn init(webview_t w, libc.cstr js): void;
 // C: const char* → Nature: libc.cstr
 fn eval(webview_t w, libc.cstr js): void;
 
-// TODO
 #linkid webview_bind
 // C: void (*fn)(const char *seq, const char *req, void *arg) → Nature: rawptr<fn(libc.cstr, libc.cstr, anyptr) -> void>
 // C: const char* → libc.cstr; void* → anyptr
@@ -62,3 +60,29 @@ fn unbind(webview_t w, libc.cstr name): void;
 #linkid webview_return
 // C: int status → Nature: i32; const char* → libc.cstr
 fn  webview_return(webview_t w, libc.cstr seq, i32  status, libc.cstr result) : void;
+
+
+
+type Webview = struct{
+    webview_t webview;
+}
+// 运行消息循环并在窗口关闭后自动清理
+fn Webview.run() {
+    run(self.webview)
+    destroy(self.webview)
+}
+
+// 终止消息循环
+fn Webview.terminate() {
+    if self.webview != null {
+        terminate(self.webview)
+    }
+}
+
+fn Webview.eval(string js) {
+    eval(self.webview, js.to_cstr())
+}
+
+fn Webview.bind(string name, fn(libc.cstr, libc.cstr, anyptr):void callback, anyptr context):void {
+    bind(self.webview, name.to_cstr(), libc.to_cfn(callback as anyptr), context)
+}

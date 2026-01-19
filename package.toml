@@ -3,7 +3,7 @@ version = "0.1.0"
 authors = ["wzzc-dev"]
 license = "MIT"
 type = "lib"
-entry = "main" 
+entry = "webview" 
 
 [links]
 
